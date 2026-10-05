@@ -14,12 +14,12 @@ import {
 
 // Firebase configuration (Reads from .env or fallback values)
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || ""
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBLpsRDUVNp625V8Qov_6eVX3QoAeLt6CA",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "freelancer-e2d9e.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "freelancer-e2d9e",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "freelancer-e2d9e.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "640337156776",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:640337156776:web:33a412dc220ece83c2409d"
 };
 
 // Check if Firebase is properly configured
