@@ -11,12 +11,20 @@ const Projects = () => {
 
   // Load projects from localStorage (Added via secret admin)
   const loadProjects = () => {
-    const savedProjects = localStorage.getItem('freelance_projects');
-    if (savedProjects) {
-      const parsedProjects = JSON.parse(savedProjects);
-      // Merge initial projects with saved projects
-      setProjects([...parsedProjects, ...initialProjects]);
-    } else {
+    try {
+      const savedProjects = localStorage.getItem('freelance_projects');
+      if (savedProjects) {
+        const parsedProjects = JSON.parse(savedProjects);
+        if (Array.isArray(parsedProjects) && parsedProjects.length > 0) {
+          const savedIds = new Set(parsedProjects.map(p => p.id));
+          const filteredInitial = initialProjects.filter(p => !savedIds.has(p.id));
+          setProjects([...parsedProjects, ...filteredInitial]);
+          return;
+        }
+      }
+      setProjects(initialProjects);
+    } catch (e) {
+      console.error("Error loading projects:", e);
       setProjects(initialProjects);
     }
   };
@@ -31,19 +39,15 @@ const Projects = () => {
     return () => window.removeEventListener('projectAdded', handleProjectAdded);
   }, []);
 
-  if (projects.length === 0) {
-    return null; // Don't show the section if there are no projects yet
-  }
-
   return (
-    <section id="projects" className="py-20 px-4 max-w-7xl mx-auto">
+    <section id="projects" className="py-20 px-4 max-w-7xl mx-auto scroll-mt-20">
       <SectionHeading 
         title="Recent Client Work" 
         subtitle="A selection of my recently delivered freelance projects."
         className="text-center"
       />
       
-      <div className="flex overflow-x-auto gap-8 mt-12 pb-8 snap-x snap-mandatory hide-scrollbar">
+      <div className="flex overflow-x-auto gap-8 mt-12 pb-8 snap-x snap-mandatory hide-scrollbar md:justify-center">
         {projects.map((project, index) => (
           <motion.div
             key={project.id || index}

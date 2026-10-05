@@ -72,7 +72,16 @@ export const skillsCategories = [
   },
 ];
 
-export const projects = []; // Empty for now, add projects as you complete freelance orders
+export const projects = [
+  {
+    id: 1,
+    title: "Full-Stack Web Application",
+    description: "Modern full-stack web application built with clean architecture, responsive design, RESTful APIs, and optimized performance.",
+    techStack: ["React.js", "Node.js", "Express.js", "MongoDB", "Tailwind CSS"],
+    link: "https://github.com/IAM-Hiru",
+    imageUrl: ""
+  }
+];
 
 export const freelanceProcess = [
   { step: "01", title: "Understand", description: "Understand the client's requirements and goals." },

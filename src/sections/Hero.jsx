@@ -94,7 +94,11 @@ const Hero = ({ onOpenModal }) => {
               </Button>
               <Button variant="outline" className="px-8 py-4 text-lg" onClick={() => {
                 const el = document.getElementById('projects');
-                if(el) el.scrollIntoView({ behavior: 'smooth' });
+                if(el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                  window.location.hash = '#projects';
+                }
               }}>
                 View My Work
               </Button>
@@ -121,7 +125,7 @@ const Hero = ({ onOpenModal }) => {
           </div>
 
           {/* Right Column: Interactive Code Character */}
-          <div className="relative w-full aspect-square max-w-[400px] lg:max-w-[600px] mx-auto z-20 mt-8 lg:mt-0">
+          <div className="hidden lg:block relative w-full aspect-square max-w-[400px] lg:max-w-[600px] mx-auto z-20 mt-8 lg:mt-0">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}

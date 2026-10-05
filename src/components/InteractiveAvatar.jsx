@@ -71,7 +71,7 @@ const InteractiveAvatar = () => {
       {/* Background Grid */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik00MCAwSDBWMGg0MHY0MEgzOVYxSDQweiIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjA1IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KPC9zdmc+')] opacity-50 dark:opacity-20 pointer-events-none"></div>
 
-      <div className="relative w-full h-full flex flex-col items-center justify-end z-10">
+      <div className="relative w-full h-full flex flex-col items-center justify-end z-10 scale-[0.82] md:scale-90 lg:scale-100 origin-bottom transition-transform duration-300">
         
         {/* === HUMAN BODY (Breathing Animation) === */}
         <motion.div 

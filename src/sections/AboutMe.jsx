@@ -19,7 +19,7 @@ const AboutMe = () => {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative flex justify-center items-center"
+          className="hidden md:flex relative justify-center items-center"
         >
           <AboutMeAvatar />
         </motion.div>
