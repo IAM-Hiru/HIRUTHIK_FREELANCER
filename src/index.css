@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    /* Base is light mode, but dark mode classes will override if .dark is present */
+    @apply antialiased bg-slate-50 text-slate-900;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/80 border-slate-200 shadow-xl dark:bg-neutral-900/60 dark:border-neutral-800 dark:shadow-2xl backdrop-blur-md border transition-colors duration-300;
+  }
+  
+  .glass-card {
+    @apply bg-white/60 border-slate-200 hover:border-indigo-500/30 dark:bg-neutral-900/50 dark:border-neutral-800 dark:hover:border-orange-500/50 backdrop-blur-lg border transition-all duration-300 rounded-2xl;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-rose-500 dark:from-red-500 dark:via-orange-500 dark:to-yellow-400 transition-all duration-300;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100 dark:bg-neutral-950 transition-colors duration-300;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 hover:bg-indigo-400 dark:bg-neutral-800 dark:hover:bg-orange-500 rounded-full transition-colors duration-300;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float-delayed {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float-delayed {
+  animation: float-delayed 8s ease-in-out infinite 2s;
+}
+
+/* Avatar Animations */
+@keyframes tap-left {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(5deg) translateY(-5px); }
+}
+
+.animate-tap-left {
+  animation: tap-left 0.5s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+@keyframes tap-right {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-5deg) translateY(-5px); }
+}
+
+.animate-tap-right {
+  animation: tap-right 0.5s ease-in-out infinite 0.25s;
+  transform-origin: top center;
+}
+
+@keyframes type-left {
+  0%, 100% { transform: rotate(10deg); }
+  50% { transform: rotate(30deg); }
+}
+
+.animate-type-left {
+  animation: type-left 0.3s ease-in-out infinite;
+}
+
+@keyframes type-right {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(-30deg); }
+}
+
+.animate-type-right {
+  animation: type-right 0.4s ease-in-out infinite 0.1s;
+}
