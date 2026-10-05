@@ -68,10 +68,10 @@ const Hero = ({ onOpenModal }) => {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-4xl lg:text-6xl font-bold mb-4 leading-tight text-slate-900 dark:text-white transition-colors duration-300"
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 leading-tight text-slate-900 dark:text-white transition-colors duration-300"
             >
               Hi, I'm {personalInfo.name.split(' ')[0]} <br/>
-              <span className="text-gradient text-3xl lg:text-5xl">{personalInfo.headline}</span>
+              <span className="text-gradient text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">{personalInfo.headline}</span>
             </motion.h1>
 
             <motion.p 
@@ -125,7 +125,7 @@ const Hero = ({ onOpenModal }) => {
           </div>
 
           {/* Right Column: Interactive Code Character */}
-          <div className="hidden lg:block relative w-full aspect-square max-w-[400px] lg:max-w-[600px] mx-auto z-20 mt-8 lg:mt-0">
+          <div className="hidden lg:block relative w-full aspect-square max-w-[380px] lg:max-w-[440px] xl:max-w-[500px] mx-auto z-20 mt-8 lg:mt-0">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
