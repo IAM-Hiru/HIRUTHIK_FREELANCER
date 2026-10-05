@@ -3,29 +3,29 @@ import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import { ExternalLink, Code } from 'lucide-react';
 import { projects as initialProjects } from '../data/portfolioData';
+import { fetchCloudProjects } from '../firebase';
 import SectionHeading from '../components/SectionHeading';
 import Badge from '../components/Badge';
 
 const Projects = () => {
   const [projects, setProjects] = useState(initialProjects);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Load projects from localStorage (Added via secret admin)
-  const loadProjects = () => {
+  // Load projects from Firebase Cloud Firestore (with local fallback)
+  const loadProjects = async () => {
     try {
-      const savedProjects = localStorage.getItem('freelance_projects');
-      if (savedProjects) {
-        const parsedProjects = JSON.parse(savedProjects);
-        if (Array.isArray(parsedProjects) && parsedProjects.length > 0) {
-          const savedIds = new Set(parsedProjects.map(p => p.id));
-          const filteredInitial = initialProjects.filter(p => !savedIds.has(p.id));
-          setProjects([...parsedProjects, ...filteredInitial]);
-          return;
-        }
+      setIsLoading(true);
+      const cloudProjects = await fetchCloudProjects();
+      if (Array.isArray(cloudProjects) && cloudProjects.length > 0) {
+        setProjects(cloudProjects);
+      } else {
+        setProjects(initialProjects);
       }
-      setProjects(initialProjects);
     } catch (e) {
       console.error("Error loading projects:", e);
       setProjects(initialProjects);
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Save, ArrowLeft, CheckCircle, Trash2, Eye, EyeOff, Shield, Edit2, Upload, X as XIcon } from 'lucide-react';
+import { Lock, Save, ArrowLeft, CheckCircle, Trash2, Eye, EyeOff, Shield, Edit2, Upload, Cloud, RefreshCw, X as XIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Badge from '../components/Badge';
+import { 
+  fetchCloudProjects, 
+  saveCloudProject, 
+  updateCloudProject, 
+  deleteCloudProject, 
+  isFirebaseConfigured 
+} from '../firebase';
 
 // Simple admin password - you can change this
 const ADMIN_PASSWORD = 'AD@hiru28';
@@ -14,9 +21,8 @@ const AddProjectPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [isSaved, setIsSaved] = useState(false);
-  const [savedProjects, setSavedProjects] = useState(() => {
-    return JSON.parse(localStorage.getItem('freelance_projects') || '[]');
-  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [savedProjects, setSavedProjects] = useState([]);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -26,6 +32,21 @@ const AddProjectPage = () => {
     imageUrl: ''
   });
   const [editingId, setEditingId] = useState(null);
+
+  const loadAllProjects = async () => {
+    try {
+      const list = await fetchCloudProjects();
+      setSavedProjects(list || []);
+    } catch (e) {
+      console.error("Error fetching projects:", e);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadAllProjects();
+    }
+  }, [isAuthenticated]);
 
   const handleEdit = (project) => {
     setEditingId(project.id);
@@ -64,46 +85,49 @@ const AddProjectPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    const techArray = formData.techStack.split(',').map(item => item.trim()).filter(Boolean);
-    const existingProjects = JSON.parse(localStorage.getItem('freelance_projects') || '[]');
-    let updatedProjects;
-
-    if (editingId) {
-      updatedProjects = existingProjects.map(p => 
-        p.id === editingId ? { ...p, title: formData.title, description: formData.description, techStack: techArray, link: formData.link, imageUrl: formData.imageUrl } : p
-      );
-    } else {
-      const newProject = {
-        id: Date.now(),
+    try {
+      const techArray = formData.techStack.split(',').map(item => item.trim()).filter(Boolean);
+      const projectPayload = {
         title: formData.title,
         description: formData.description,
         techStack: techArray,
         link: formData.link,
         imageUrl: formData.imageUrl
       };
-      updatedProjects = [newProject, ...existingProjects];
-    }
-    
-    localStorage.setItem('freelance_projects', JSON.stringify(updatedProjects));
-    window.dispatchEvent(new Event('projectAdded'));
-    setSavedProjects(updatedProjects);
 
-    setIsSaved(true);
-    setTimeout(() => {
-      setIsSaved(false);
-      setFormData({ title: '', description: '', techStack: '', link: '', imageUrl: '' });
-      setEditingId(null);
-    }, 2000);
+      if (editingId) {
+        await updateCloudProject(editingId, projectPayload);
+      } else {
+        await saveCloudProject(projectPayload);
+      }
+      
+      await loadAllProjects();
+      setIsSaved(true);
+      setTimeout(() => {
+        setIsSaved(false);
+        setFormData({ title: '', description: '', techStack: '', link: '', imageUrl: '' });
+        setEditingId(null);
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to save project:", error);
+      alert("Failed to save project: " + error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleDelete = (id) => {
-    const updated = savedProjects.filter(p => p.id !== id);
-    localStorage.setItem('freelance_projects', JSON.stringify(updated));
-    window.dispatchEvent(new Event('projectAdded'));
-    setSavedProjects(updated);
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this project?")) return;
+    try {
+      await deleteCloudProject(id);
+      await loadAllProjects();
+    } catch (error) {
+      console.error("Failed to delete project:", error);
+    }
   };
 
   // --- Login Screen ---
@@ -198,8 +222,18 @@ const AddProjectPage = () => {
               <Lock size={20} className="text-orange-500" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-white">Admin Panel</h1>
-              <p className="text-xs text-neutral-400">Manage Portfolio Projects</p>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-bold text-white">Admin Panel</h1>
+                <span className={`text-xs px-2 py-0.5 rounded-full flex items-center gap-1 ${isFirebaseConfigured ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}`}>
+                  <Cloud size={12} />
+                  {isFirebaseConfigured ? 'Cloud Sync Active (Live to Everyone)' : 'Local Storage Mode'}
+                </span>
+              </div>
+              <p className="text-xs text-neutral-400">
+                {isFirebaseConfigured 
+                  ? 'Projects saved here are instantly published to all visitors worldwide.' 
+                  : 'Add Firebase credentials in .env to sync projects live for all visitors.'}
+              </p>
             </div>
           </div>
           <button
@@ -337,9 +371,18 @@ const AddProjectPage = () => {
 
                     <button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 text-white font-bold py-3 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(249,115,22,0.3)] flex items-center justify-center gap-2 mt-2"
+                      disabled={isSubmitting}
+                      className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_20px_rgba(249,115,22,0.3)] flex items-center justify-center gap-2 mt-2 cursor-pointer"
                     >
-                      <Save size={18} /> {editingId ? 'Update Project' : 'Save Project to Portfolio'}
+                      {isSubmitting ? (
+                        <>
+                          <RefreshCw className="animate-spin" size={18} /> Saving to {isFirebaseConfigured ? 'Cloud...' : 'Portfolio...'}
+                        </>
+                      ) : (
+                        <>
+                          <Save size={18} /> {editingId ? 'Update Project' : 'Save Project to Portfolio'}
+                        </>
+                      )}
                     </button>
                   </motion.form>
                 )}
