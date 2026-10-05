@@ -72,7 +72,32 @@ export const skillsCategories = [
   },
 ];
 
-export const projects = [];
+export const projects = [
+  {
+    id: "fintech-platform",
+    title: "Fintech & Wealth Management Platform",
+    description: "A comprehensive fintech web application featuring real-time financial analytics, secure payment integrations, user portfolio tracking, and interactive market trend dashboards.",
+    techStack: ["React.js", "Node.js", "Express.js", "MongoDB", "Tailwind CSS", "Chart.js"],
+    link: "https://hiruthik-freelancer.vercel.app/",
+    imageUrl: ""
+  },
+  {
+    id: "ecommerce-storefront",
+    title: "Modern Full-Stack E-Commerce Solution",
+    description: "Responsive digital storefront with product filtering, dynamic cart system, secure checkout workflows, and an intuitive administrative inventory management dashboard.",
+    techStack: ["MERN Stack", "Tailwind CSS", "Redux Toolkit", "Stripe API"],
+    link: "https://hiruthik-freelancer.vercel.app/",
+    imageUrl: ""
+  },
+  {
+    id: "saas-analytics-portal",
+    title: "SaaS Business Analytics & Client Portal",
+    description: "High-performance business intelligence dashboard delivering live metric monitoring, custom data reporting, automated notifications, and clean UI architecture.",
+    techStack: ["React.js", "Tailwind CSS", "Framer Motion", "Vite", "REST APIs"],
+    link: "https://hiruthik-freelancer.vercel.app/",
+    imageUrl: ""
+  }
+];
 
 export const freelanceProcess = [
   { step: "01", title: "Understand", description: "Understand the client's requirements and goals." },

@@ -16,9 +16,15 @@ const Contact = ({ onOpenModal }) => {
           
           <div className="transform translate-z-20 relative z-10">
             <SectionHeading 
-              title="Have an Idea? Let's Build It Together." 
+              title={
+                <>
+                  Have an Idea?
+                  <br />
+                  Let's Build It Together
+                </>
+              } 
               subtitle="I'm currently available for freelance projects and collaborations."
-              className="mx-auto"
+              className="text-center mx-auto"
             />
             
             <div className="flex justify-center mt-8 mb-12">
